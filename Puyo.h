@@ -12,6 +12,8 @@ namespace Py {
 		Point p;
 		Color color;
 		Puyo(){}
+		Puyo(Color _color) :
+			color(_color) {}
 		Puyo(int x, int y, Color _color) :
 			p(x,y), color(_color) {}
 		//static const std::array<Color, 5> puyo;

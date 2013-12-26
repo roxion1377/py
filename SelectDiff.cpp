@@ -1,5 +1,6 @@
 #include "SelectDiff.h"
 #include "GameWait.h"
+#include "SelectTeam.h"
 
 namespace Py {
 	namespace Ev {
@@ -8,12 +9,17 @@ namespace Py {
 			nowSelectDiff = 2;
 		}
 
+		SelectDiff::SelectDiff(const Param& param) : State(DIF,param), font(std::make_unique<Font>(30))
+		{
+			nowSelectDiff = param.diff;
+		}
+
 		void SelectDiff::draw()const
 		{
 			static const std::array<String, 5> list = { L"åÉä√", L"ä√å˚", L"íÜêh", L"êhå˚", L"åÉêh" };
 			Color color;
-			for (int i = 0; i < 5; i++) {
-				if (i == nowSelectDiff) {
+			for (size_t i = 0; i < list.size(); i++) {
+				if (static_cast<int>(i) == nowSelectDiff) {
 					color = Palette::Red;
 				}
 				else {
@@ -32,7 +38,7 @@ namespace Py {
 				nowSelectDiff = (nowSelectDiff + 1) % 5;
 			}
 			if (Input::KeyEnter.clicked) {
-				return std::make_shared<GameWait>(Param(nowSelectDiff));
+				return std::make_shared<SelectTeam>(Param(nowSelectDiff));
 			}
 			return getPtr();
 		}

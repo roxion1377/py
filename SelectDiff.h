@@ -12,6 +12,7 @@ namespace Py {
 			SelectDiff& operator=(const SelectDiff& e);
 		public:
 			SelectDiff();
+			SelectDiff(const Param& param);
 			Ptr update();
 			void draw()const;
 		};

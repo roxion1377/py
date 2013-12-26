@@ -15,8 +15,9 @@ namespace Py{
 		void initialize();
 	public:
 		Play(const std::vector<Ev::Ptr>& _state) :
-			state(_state),font(std::make_unique<Font>()){
+			state(_state), font(std::make_unique<Font>()){
 			for (Ev::Ptr& st : state) st = std::make_shared<Ev::GameMain>(st->getParam());
+
 		}
 		void draw() const ;
 		Ptr update();
