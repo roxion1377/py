@@ -1,11 +1,11 @@
-#include "Drop.h"
-#include "Remove.h"
+#include "DropOjama.h"
+#include "Wait.h"
 #include "Image.h"
 
 namespace Py {
 	namespace Ev {
 		namespace Gm {
-			void Drop::draw()const{
+			void DropOjama::draw()const{
 				const auto& field = param->field;
 				rect->setPos(0, 0).setSize(32 * field.width(), 32 * (field.height()-field.TH)).draw(Palette::Black);
 				for (int y = field.TH; y < field.height(); y++) {
@@ -16,7 +16,7 @@ namespace Py {
 					}
 				}
 			}
-			Ptr Drop::update() {
+			Ptr DropOjama::update() {
 				++count;
 				if (r.done()) {
 					Field& f = param->field;
@@ -35,7 +35,7 @@ namespace Py {
 						}
 					}
 					if (r.done()) {
-						return std::make_shared<Remove>(param);
+						return std::make_shared<Wait>(param);
 					}
 				}
 				r.update();

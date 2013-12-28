@@ -10,10 +10,11 @@ namespace Py {
 		/*const */int H;
 		std::vector<std::vector<Puyo>> puyoState;
 	public:
+		static const int TH = 7;
 		Field() :
 			W(0), H(0), puyoState(0, std::vector<Puyo>(0)) {}
 		Field(int _W,int _H) :
-			W(_W), H(_H), puyoState(_H, std::vector<Puyo>(_W,Puyo::E)) {
+			W(_W), H(_H+TH), puyoState(_H+TH, std::vector<Puyo>(_W,Puyo::E)) {
 			for ( int y = 0; y < H; y++ ) {
 				puyoState[y][0] = puyoState[y][W - 1] = Puyo::W;
 			}

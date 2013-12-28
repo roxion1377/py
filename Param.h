@@ -6,23 +6,9 @@
 
 namespace Py {
 	namespace Ev {
-		namespace Gm {
-			struct Param {
-				Field field;
-				Pair pair;
-				PairGen pairGen;
-				int chain;
-				int chainScore, chainScoreExt;
-				int nowOjama;
-				Param(){}
-				Param(const Field& _field,const int seed,const int colNum) :
-					field(_field),pairGen(seed,colNum),chain(0),chainScore(0),chainScoreExt(0),nowOjama(0) {
-					pair = pairGen();
-				}
-			};
-		}
 		struct Param {
 			int diff, team;
+			std::vector<int> enemy;
 			Param() :
 				diff(0) {}
 			Param(int _diff) :
@@ -37,5 +23,21 @@ namespace Py {
 				return p;
 			}
 		};
+		namespace Gm {
+			struct Param {
+				Field field;
+				Pair pair;
+				PairGen pairGen;
+				int chain;
+				int chainScore, chainScoreExt;
+				int nowOjama;
+				std::vector<Param*> enemy;
+				Param(){}
+				Param(const Field& _field, const int seed, const int colNum) :
+					field(_field), pairGen(seed, colNum), chain(0), chainScore(0), chainScoreExt(0), nowOjama(0) {
+					pair = pairGen();
+				}
+			};
+		}
 	}
 }

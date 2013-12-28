@@ -7,10 +7,12 @@ namespace Py {
 		namespace Gm {
 			void Wait::draw()const {
 				const auto& field = param->field;
-				rect->setPos(0, 0).setSize(32 * field.width(), 32 * field.height()).draw(Palette::Black);
-				for (int y = 0; y < field.height(); y++) {
+				rect->setPos(0, 0).setSize(32 * field.width(), 32 * (field.height()-field.TH)).draw(Palette::Black);
+				for (int y = field.TH; y < field.height(); y++) {
 					for (int x = 0; x < field.width(); x++) {
-						Image::getImage(field.get(x, y).color).draw(x * 32, y * 32);
+						int rx = x;
+						int ry = y - field.TH;
+						Image::getImage(field.get(x, y).color).draw(rx * 32, ry * 32);
 					}
 				}
 			}

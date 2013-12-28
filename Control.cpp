@@ -8,24 +8,53 @@ namespace Py {
 		namespace Gm {
 			void Control::draw()const
 			{
-				static const auto getColor = [](const Puyo::Color& color) {
-					if (color == Puyo::R) return Palette::Red;
-					if (color == Puyo::G) return Palette::Green;
-					if (color == Puyo::B) return Palette::Blue;
-					if (color == Puyo::Y) return Palette::Yellow;
-					if (color == Puyo::P) return Palette::Purple;
-					if (color == Puyo::E) return Palette::Black;
-					return Palette::Gray;
-				};
 				const auto& field = param->field;
-				rect->setPos(0, 0).setSize(32 * field.width(), 32 * field.height()).draw(Palette::Black);
-				for (int y = 0; y < field.height(); y++) {
+				rect->setPos(0, 0).setSize(32 * field.width(), 32 * (field.height()-field.TH)).draw(Palette::Black);
+				for (int y = field.TH; y < field.height(); y++) {
 					for (int x = 0; x < field.width(); x++) {
-						Image::getImage(field.get(x, y).color).draw(x * 32, y * 32);
+						int rx = x;
+						int ry = y - field.TH;
+						Image::getImage(field.get(x, y).color).draw(rx * 32, ry * 32);
 					}
 				}
 				for (const Puyo& puyo : param->pair.getPair()) {
-					Image::getImage(puyo.color).draw(puyo.p.x * 32, puyo.p.y * 32 - 32 * r.rate());
+					int rx = puyo.p.x;
+					int ry = puyo.p.y-field.TH;
+					Image::getImage(puyo.color).draw(rx * 32, ry * 32 - 32 * r.rate());
+				}
+			}
+			bool Control::inside(const Pair& pair)const
+			{
+				const auto& p = pair.getPair();
+				return all_of(p.begin(), p.end(), [=](const Puyo& p) {
+					return param->field.get(p.p).color == Puyo::E;
+				});
+			}
+			bool Control::canRotate(int d)const
+			{
+				return inside(param->pair.rotate(d).getPair());
+			}
+			void Control::rotate(int d)
+			{
+				if (canRotate(d)) {
+					param->pair = param->pair.rotate(d);
+				}
+				else {
+					const auto& nextPair = [=](const Pair& pair) {
+						if (pair.getDist() == 1) {
+							return pair + Point(-1, 0);
+						}
+						if (pair.getDist() == 2) {
+							return pair + Point(0, -1);
+						}
+						if (pair.getDist() == 3) {
+							return pair + Point(1, 0);
+						}
+						return pair + Point(0, 0);
+					}(param->pair.rotate(d));
+					if (inside(nextPair)) {
+						param->pair = nextPair;
+					}
 				}
 			}
 			Ptr Control::update()
@@ -37,34 +66,26 @@ namespace Py {
 					return param->field.get(p.p).color == Puyo::E;
 				};
 				if (Input::KeyZ.clicked) {
-					const auto& nextPair = pair.rotate(-1);
-					const auto& next = nextPair.getPair();
-					if (std::all_of(next.begin(), next.end(), check)) pair = nextPair;
+					rotate(-1);
 				}
 				if (Input::KeyX.clicked) {
-					const auto& nextPair = pair.rotate(1);
-					const auto& next = nextPair.getPair();
-					if (std::all_of(next.begin(), next.end(), check)) pair = nextPair;
+					rotate(1);
 				}
 				if (Input::KeyDown.pressed) {
 					r += 14;
 				}
 				if (Input::KeyLeft.pressed) {
-					const auto& next = (pair + Point(-1, 0)).getPair();
-					if (std::all_of(next.begin(), next.end(), check)) pair += Point(-1, 0);
+					if (inside(pair + Point(-1, 0))) pair += Point(-1, 0);
 				}
 				if (Input::KeyRight.pressed) {
-					const auto& next = (pair + Point(1, 0)).getPair();
-					if (std::all_of(next.begin(), next.end(), check)) pair += Point(1, 0);
+					if (inside(pair + Point(1, 0))) pair += Point(1, 0);
 				}
 				if (!r.update()) {
-					const auto& next = (pair + Point(0, 1)).getPair();
-					if (!std::all_of(next.begin(), next.end(), check)) {
+					if (!inside(pair + Point(0, 1))) {
 						Field& field = param->field;
 						for (const Puyo& p : pair.getPair()) field.set(p.p, p.color);
 						pair = param->pairGen();
-						//r.start();
-						return std::make_shared<Drop>(param)->update();// ->update();
+						return std::make_shared<Drop>(param)->update();
 					}
 					else {
 						pair += Point(0, 1);

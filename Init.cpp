@@ -34,6 +34,13 @@ namespace Py {
 	Ptr Init::update()
 	{
 		if (nowPlayer == state.end()) {
+			for (size_t i = 0; i < state.size(); i++) {
+				for (size_t j = 0; j < state.size(); j++) {
+					if (state[i]->getParam().team != state[j]->getParam().team) {
+						state[i]->getParam().enemy.push_back(j);
+					}
+				}
+			}
 			return std::make_shared<Play>(state);
 		}
 		else {

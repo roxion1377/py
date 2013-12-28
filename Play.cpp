@@ -8,6 +8,7 @@ namespace Py {
 		for (size_t i = 0; i < state.size(); i++) {
 			Graphics::Set2DTransform({ 1.0, 1.0 }, trans[i]);
 			state[i]->draw();
+			font->draw(Format(param[i].chainScore, L"\n", param[i].chainScoreExt, L"\n", param[i].nowOjama));
 		}
 
 		Graphics::Reset2DState();
@@ -15,7 +16,7 @@ namespace Py {
 
 	Ptr Play::update()
 	{
-		for (Ev::Ptr& st : state) st = st->update();
+		for (Ev::Gm::Ptr& st : state) st = st->update();
 		return getPtr();
 	}
 }

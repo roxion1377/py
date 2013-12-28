@@ -33,7 +33,7 @@ namespace Py {
 			Param param;
 		public:
 			Type getType() const { return type; }
-			Param* getParam() { return &param; }
+			Param& getParam() { return param; }
 		};
 		typedef std::shared_ptr<State> Ptr;
 

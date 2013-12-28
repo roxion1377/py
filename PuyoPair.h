@@ -25,7 +25,7 @@ namespace Py {
 		int getDist() const { return dist; }
 		Pair& operator+=(const Point& d);
 		Pair operator+(const Point& d)const;
-		Pair rotate(int u) const;
+		Pair rotate(int u)const;
 		/*
 		Point minmaxX() {
 			const auto& x = std::minmax_element(pair.begin(), pair.end(), [](const Puyo& a, const Puyo& b) {
@@ -56,7 +56,7 @@ namespace Py {
 		PairGen(int seed,int colorNum) :
 			rng(seed),dist(1,colorNum) {}
 		Pair operator()() {
-			return Pair({ Puyo(3, 1, (Puyo::Color)dist(rng)), Puyo(3, 0, (Puyo::Color)dist(rng)) });
+			return Pair({ Puyo(3, 7, (Puyo::Color)dist(rng)), Puyo(3, 6, (Puyo::Color)dist(rng)) });
 		}
 	};
 };

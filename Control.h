@@ -11,6 +11,9 @@ namespace Py {
 				R r;
 				std::unique_ptr<Rect> rect;
 				//std::unique_ptr<Circle> circle;
+				bool inside(const Pair& pair)const;
+				bool canRotate(int d)const;
+				void rotate(int d);
 			public:
 				Control(Param* _param) :
 					State(CONTROL,_param),
