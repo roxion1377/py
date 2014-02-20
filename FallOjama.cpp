@@ -24,10 +24,10 @@ namespace Py {
 					std::iota(pos.begin(),pos.end(),1);
 					param->nowOjama -= t;
 					for (int i = 0; t > 0; i++) {
+						std::random_shuffle(pos.begin(), pos.end());
 						for (int j = 0; j < std::min(6, t); j++) {
 							param->field(pos[j], i).color = Puyo::J;
 						}
-						std::random_shuffle(pos.begin(), pos.end());
 						t -= 6;
 					}
 					return std::make_shared<DropOjama>(param);

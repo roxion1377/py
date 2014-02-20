@@ -61,10 +61,7 @@ namespace Py {
 			{
 				++count;
 				auto& pair = param->pair;
-				if (Input::KeyR.clicked) pair = param->pairGen();
-				const auto check = [=](const Puyo& p) {
-					return param->field.get(p.p).color == Puyo::E;
-				};
+				//if (Input::KeyR.clicked) pair = param->pairGen();
 				if (Input::KeyZ.clicked) {
 					rotate(-1);
 				}
@@ -72,7 +69,8 @@ namespace Py {
 					rotate(1);
 				}
 				if (Input::KeyDown.pressed) {
-					r += 14;
+					if(!r.done()) r += 14;
+					else w += 14;
 				}
 				if (Input::KeyLeft.pressed) {
 					if (inside(pair + Point(-1, 0))) pair += Point(-1, 0);
@@ -82,10 +80,12 @@ namespace Py {
 				}
 				if (!r.update()) {
 					if (!inside(pair + Point(0, 1))) {
-						Field& field = param->field;
-						for (const Puyo& p : pair.getPair()) field.set(p.p, p.color);
-						pair = param->pairGen();
-						return std::make_shared<Drop>(param)->update();
+						if (!w.update()) {
+							Field& field = param->field;
+							for (const Puyo& p : pair.getPair()) field.set(p.p, p.color);
+							pair = param->pairGen();
+							return std::make_shared<Drop>(param);
+						}
 					}
 					else {
 						pair += Point(0, 1);

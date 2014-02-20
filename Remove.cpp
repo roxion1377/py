@@ -11,7 +11,7 @@ namespace Py {
 			const std::array<Point, 4> Remove::d = { Point(0, 1), Point(1, 0), Point(0,-1), Point(-1, 0) };
 			void Remove::draw() const {
 				const auto& field = param->field;
-				rect->setPos(0, 0).setSize(32 * field.width(), 32 * field.height()).draw(Palette::Black);
+				rect->setPos(0, 0).setSize(32 * field.width(), 32 * (field.height()-field.TH)).draw(Palette::Black);
 				for (int y = field.TH; y < field.height(); y++) {
 					for (int x = 0; x < field.width(); x++) {
 						int rx = x;
